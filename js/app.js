@@ -19,6 +19,8 @@ var allProducts = [];
 var imageOne = document.getElementById("image-one");
 var imageTwo = document.getElementById("image-two");
 var imageThree = document.getElementById("image-three");
+var imageTitles = [];
+var imageVotes = [];
 
 
 
@@ -59,6 +61,21 @@ new Product('usb.gif');
 
 
 
+function voteMaster(e){
+    e.preventDefault();
+    imageClick = e.target.title;
+    for(var i = 0; i < allProducts.length; i++){
+        if(imageClick === allProducts[i].title){
+        allProducts[i].timesVoted++;
+        }
+    }
+    if(rounds < 25){
+        render();
+    }else{
+        formEl.innerHTML = '';
+        displayChart();
+    }
+}
 
 
 
@@ -80,7 +97,6 @@ function randomNumberIndexCreator(){
     while(randomNumbers.length>3){
         randomNumbers.pop();
     }
-    console.log(randomNumbers)
 }
 
 function render(){
@@ -88,46 +104,22 @@ function render(){
 
     imageOne.src = allProducts[randomNumbers[0]].imgSource;
     imageOne.alt = allProducts[randomNumbers[0]].alt;
-    imageOne.alt = allProducts[randomNumbers[0]].title;
+    imageOne.title = allProducts[randomNumbers[0]].title;
     allProducts[randomNumbers[0]].timesShown++;
 
     imageTwo.src = allProducts[randomNumbers[1]].imgSource;
     imageTwo.alt = allProducts[randomNumbers[1]].alt;
-    imageTwo.alt = allProducts[randomNumbers[1]].title;
+    imageTwo.title = allProducts[randomNumbers[1]].title;
     allProducts[randomNumbers[1]].timesShown++;
 
     imageThree.src = allProducts[randomNumbers[2]].imgSource;
     imageThree.alt = allProducts[randomNumbers[2]].alt;
-    imageThree.alt = allProducts[randomNumbers[2]].title;
+    imageThree.title = allProducts[randomNumbers[2]].title;
     allProducts[randomNumbers[2]].timesShown++;
     rounds++
     showResults();
 }
 
-
-function voteMaster(event){
-    event.preventDefault();
-    if (radioOne.checked == true){
-        allProducts[randomNumbers[0]].timesVoted++;
-    }
-    if (radioTwo.checked == true){
-        allProducts[randomNumbers[1]].timesVoted++;
-    }
-    if (radioThree.checked == true){
-        allProducts[randomNumbers[2]].timesVoted++;
-    }
-    if(rounds < 26){
-        render();
-    }else{
-        formEl.innerHTML = '';
-        createH2 = document.createElement('h2');
-        createH2.textContent = ('Thank you for your help! Click on the "generate results" button to see your contribution');
-        formEl.appendChild(createH2);
-    }
-    radioOne.checked = false; 
-    radioTwo.checked = false;
-    radioThree.checked = false;
-}
 
 function showResults(){
     resultsEl.innerHTML = '';
@@ -147,11 +139,97 @@ function showResults(){
     }
 }
 
+function createTitleArray(){
+    for(var i = 0; i < allProducts.length; i++){
+        imageTitles.push(allProducts[i].title);
+    }
+}
+
+function createVoteArray(){
+    for(var i = 0; i < allProducts.length; i++){
+        imageVotes.push(allProducts[i].timesVoted);
+    }
+}
+
+
+
 render();
 
 
 
-formEl.addEventListener('submit', voteMaster);
+formEl.addEventListener('click', voteMaster);
 
 
 
+
+function displayChart(){
+    createTitleArray();
+    createVoteArray();
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: imageTitles,
+            datasets: [{
+                label: '# of Votes',
+                data: imageVotes,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
