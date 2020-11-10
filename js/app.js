@@ -1,11 +1,3 @@
-//TODO
-//Need to figure out how to use radio buttons for adding votes
-// Need to render current vote tally 
-//Need to track how many times shown
-//Need to calculate percentage of times voted vs. shown
-//View Results button
-//25 round limit
-//
 
 var radioOne = document.getElementById("selection-one");
 var radioTwo = document.getElementById("selection-two");
@@ -21,6 +13,7 @@ var imageTwo = document.getElementById("image-two");
 var imageThree = document.getElementById("image-three");
 var imageTitles = [];
 var imageVotes = [];
+var canvasEl = document.getElementById("chart");
 
 
 
@@ -69,10 +62,11 @@ function voteMaster(e){
         allProducts[i].timesVoted++;
         }
     }
-    if(rounds < 25){
+    if(rounds < 3){
         render();
     }else{
         formEl.innerHTML = '';
+        createCanvasTag();
         displayChart();
     }
 }
@@ -117,27 +111,8 @@ function render(){
     imageThree.title = allProducts[randomNumbers[2]].title;
     allProducts[randomNumbers[2]].timesShown++;
     rounds++
-    showResults();
 }
 
-
-function showResults(){
-    resultsEl.innerHTML = '';
-    var createH3 = document.createElement('h3');
-    createH3.textContent = ('Name  Shown  Voted  %Success')
-    resultsEl.appendChild(createH3)
-    var perecentChosen = 0
-    for(var i = 0; i < allProducts.length; i++){
-        if(allProducts[i].timesVoted === 0 && allProducts[i].timesShown === 0){
-            percentChosen = 0
-        }else {
-            percentChosen = allProducts[i].timesVoted/allProducts[i].timesShown*100
-        }
-        var createLi = document.createElement('li');
-        createLi.textContent = (`${allProducts[i].title}     ${allProducts[i].timesShown}     ${allProducts[i].timesVoted}     ${percentChosen}%`);
-        resultsEl.appendChild(createLi);
-    }
-}
 
 function createTitleArray(){
     for(var i = 0; i < allProducts.length; i++){
@@ -151,15 +126,13 @@ function createVoteArray(){
     }
 }
 
-
-
-render();
-
-
-
-formEl.addEventListener('click', voteMaster);
-
-
+function createCanvasTag(){
+    createCanvas = document.createElement('canvas');
+    createCanvas.setAttribute("id", "myChart")
+    createCanvas.setAttribute("width", "400")
+    createCanvas.setAttribute("height", "400")
+    canvasEl.appendChild(createCanvas);
+}
 
 
 function displayChart(){
@@ -224,12 +197,29 @@ function displayChart(){
         },
         options: {
             scales: {
+                xAxes:[{
+                    ticks:{ fontSize:20,
                 yAxes: [{
                     ticks: {
                         beginAtZero: true
                     }
                 }]
             }
+            }]
+            }
         }
     });
 }
+
+
+
+render();
+
+
+
+formEl.addEventListener('click', voteMaster);
+
+
+
+
+
