@@ -114,7 +114,7 @@ function voteMaster(event){
     }else{
         formEl.innerHTML = '';
         createH2 = document.createElement('h2');
-        createH2.textContent('Thank you for your help! Click on the "generate results" button to see your contribution');
+        createH2.textContent = ('Thank you for your help! Click on the "generate results" button to see your contribution');
         formEl.appendChild(createH2);
     }
     radioOne.checked = false; 

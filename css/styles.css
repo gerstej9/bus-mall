@@ -1,5 +1,6 @@
 body {
     margin:5% 2%;
+    background-color: rgb(245, 154, 19);
 }
 header img {
     height: 100px;
@@ -40,5 +41,11 @@ nav {
 #form button{
     width:400px;
     margin:5% 2% 5% 15%;
+    height:50px;
 
 }
+
+p{
+    float:left;
+}
+
