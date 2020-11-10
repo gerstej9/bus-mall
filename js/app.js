@@ -10,9 +10,7 @@
 var radioOne = document.getElementById("selection-one");
 var radioTwo = document.getElementById("selection-two");
 var radioThree = document.getElementById("selection-three");
-var indexOne;
-var indexTwo;
-var indexThree
+var randomNumbers = [];
 var formEl = document.getElementById("form");
 var resultsEl = document.getElementById("results")
 var resultsForm = document.getElementById("results-form")
@@ -65,50 +63,59 @@ new Product('usb.gif');
 
 
 function randomGenerator(){
+    
     return Math.floor(Math.random() * allProducts.length);
 }
 
+function randomNumberIndexCreator(){
+
+    for( var i = 0; i < 3; i++){
+        var randomNumber = randomGenerator();
+        while(randomNumbers.includes(randomNumber)){
+            randomNumber = randomGenerator();
+        }
+        randomNumbers.unshift(randomNumber);
+    }
+
+    while(randomNumbers.length>3){
+        randomNumbers.pop();
+    }
+    console.log(randomNumbers)
+}
+
 function render(){
-    indexOne = randomGenerator();
-    indexTwo = randomGenerator();
-    indexThree = randomGenerator();
-    while(indexTwo === indexOne){
-        indexTwo = randomGenerator();
-    }
-    while(indexThree === indexOne || indexThree === indexTwo){
-        indexThree = randomGenerator();
-    }
+    randomNumberIndexCreator();
 
-    imageOne.src = allProducts[indexOne].imgSource;
-    imageOne.alt = allProducts[indexOne].alt;
-    imageOne.alt = allProducts[indexOne].title;
-    allProducts[indexOne].timesShown++;
+    imageOne.src = allProducts[randomNumbers[0]].imgSource;
+    imageOne.alt = allProducts[randomNumbers[0]].alt;
+    imageOne.alt = allProducts[randomNumbers[0]].title;
+    allProducts[randomNumbers[0]].timesShown++;
 
-    imageTwo.src = allProducts[indexTwo].imgSource;
-    imageTwo.alt = allProducts[indexTwo].alt;
-    imageTwo.alt = allProducts[indexTwo].title;
-    allProducts[indexTwo].timesShown++;
+    imageTwo.src = allProducts[randomNumbers[1]].imgSource;
+    imageTwo.alt = allProducts[randomNumbers[1]].alt;
+    imageTwo.alt = allProducts[randomNumbers[1]].title;
+    allProducts[randomNumbers[1]].timesShown++;
 
-    imageThree.src = allProducts[indexThree].imgSource;
-    imageThree.alt = allProducts[indexThree].alt;
-    imageThree.alt = allProducts[indexThree].title;
-    allProducts[indexThree].timesShown++;
+    imageThree.src = allProducts[randomNumbers[2]].imgSource;
+    imageThree.alt = allProducts[randomNumbers[2]].alt;
+    imageThree.alt = allProducts[randomNumbers[2]].title;
+    allProducts[randomNumbers[2]].timesShown++;
     rounds++
+    showResults();
 }
 
 
 function voteMaster(event){
     event.preventDefault();
     if (radioOne.checked == true){
-        allProducts[indexOne].timesVoted++;
+        allProducts[randomNumbers[0]].timesVoted++;
     }
     if (radioTwo.checked == true){
-        allProducts[indexTwo].timesVoted++;
+        allProducts[randomNumbers[1]].timesVoted++;
     }
     if (radioThree.checked == true){
-        allProducts[indexThree].timesVoted++;
+        allProducts[randomNumbers[2]].timesVoted++;
     }
-    resultsEl.innerHTML = '';
     if(rounds < 26){
         render();
     }else{
@@ -122,9 +129,11 @@ function voteMaster(event){
     radioThree.checked = false;
 }
 
-function showResults(event){
-    event.preventDefault();
+function showResults(){
     resultsEl.innerHTML = '';
+    var createH3 = document.createElement('h3');
+    createH3.textContent = ('Name  Shown  Voted  %Success')
+    resultsEl.appendChild(createH3)
     var perecentChosen = 0
     for(var i = 0; i < allProducts.length; i++){
         if(allProducts[i].timesVoted === 0 && allProducts[i].timesShown === 0){
@@ -142,10 +151,7 @@ render();
 
 
 
-
-
 formEl.addEventListener('submit', voteMaster);
 
-resultsForm.addEventListener('submit',showResults);
 
 
