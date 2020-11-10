@@ -62,7 +62,7 @@ function voteMaster(e){
         allProducts[i].timesVoted++;
         }
     }
-    if(rounds < 3){
+    if(rounds < 25){
         render();
     }else{
         formEl.innerHTML = '';
@@ -80,7 +80,7 @@ function randomGenerator(){
 
 function randomNumberIndexCreator(){
 
-    for( var i = 0; i < 25; i++){
+    for( var i = 0; i < 3; i++){
         var randomNumber = randomGenerator();
         while(randomNumbers.includes(randomNumber)){
             randomNumber = randomGenerator();
