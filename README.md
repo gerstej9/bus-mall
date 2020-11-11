@@ -8,6 +8,7 @@ W3Schools
 Ta's Cait and Bade
 Classmates Cristian Robles, Alan Hung, Bill Moreno
 Chart.js Documentation and code
+Classmates Alan Hung, Bill Moreno, and Cristian Robles
 
 ## Author
 James Gerstenberger
