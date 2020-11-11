@@ -18,16 +18,14 @@ var canvasEl = document.getElementById("chart");
 
 
 
-var Product = function(input){
+var Product = function(input, timesShown = 0, timesVoted = 0){
 this.imgSource = `img/${input}`;
 this.title = this.alt = input.substring(0, input.length-4);
-this.timesShown = 0;
-this.timesVoted = 0;
-// this.percentChosen = parseInt(this.timesVoted/this.timesShown*100);
+this.timesShown = timesShown;
+this.timesVoted = timesVoted;
 
 allProducts.push(this);
 }
-
 
 
 
@@ -53,6 +51,24 @@ new Product('sweep.png');
 new Product('usb.gif');
 
 
+function storeProductLs(){
+    var stringProducts = JSON.stringify(allProducts);
+    localStorage.setItem('products', stringProducts);
+}
+
+function returnProductsLs(){
+    var productsLs = localStorage.getItem('products');
+    var parsedProducts = JSON.parse(productsLs);
+    generateNewObjects(parsedProducts);
+}
+
+function generateNewObjects(parsed){
+    allProducts = [];
+    for(var i = 0; i < parsed.length; i++){
+        new Product(parsed[i].imgSource.substring(4), parsed[i].timesShown, parsed[i].timesVoted);
+    }
+
+}
 
 function voteMaster(e){
     e.preventDefault();
@@ -69,6 +85,10 @@ function voteMaster(e){
         createCanvasTag();
         displayChart();
     }
+
+    storeProductLs();
+    returnProductsLs();
+
 }
 
 
@@ -212,8 +232,14 @@ function displayChart(){
 }
 
 
-
+if(!localStorage.products){
+    storeProductLs();
+}else{
+    returnProductsLs();
+}
 render();
+
+
 
 
 
