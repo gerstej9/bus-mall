@@ -1,11 +1,6 @@
-
-var radioOne = document.getElementById("selection-one");
-var radioTwo = document.getElementById("selection-two");
-var radioThree = document.getElementById("selection-three");
+//Global Variables
 var randomNumbers = [];
 var formEl = document.getElementById("form");
-var resultsEl = document.getElementById("results")
-var resultsForm = document.getElementById("results-form")
 var rounds = 0;
 var allProducts = [];
 var imageOne = document.getElementById("image-one");
@@ -17,7 +12,7 @@ var canvasEl = document.getElementById("chart");
 
 
 
-
+//Constructor Function
 var Product = function(input, timesShown = 0, timesVoted = 0){
 this.imgSource = `img/${input}`;
 this.title = this.alt = input.substring(0, input.length-4);
@@ -28,7 +23,7 @@ allProducts.push(this);
 }
 
 
-
+//Object Instances
 new Product('bag.jpg');
 new Product('banana.jpg');
 new Product('bathroom.jpg');
@@ -50,27 +45,31 @@ new Product('wine-glass.jpg');
 new Product('sweep.png');
 new Product('usb.gif');
 
+//Helper Functions
 
+//Function for storing products into local storage
 function storeProductLs(){
     var stringProducts = JSON.stringify(allProducts);
     localStorage.setItem('products', stringProducts);
 }
 
+//function for returning products from local storage
 function returnProductsLs(){
     var productsLs = localStorage.getItem('products');
     var parsedProducts = JSON.parse(productsLs);
-    generateNewObjects(parsedProducts);
+    generateObjectsFromLs(parsedProducts);
 }
 
-function generateNewObjects(parsed){
+//function for turning local storage string products back into product objects
+function generateObjectsFromLs(parsed){
     allProducts = [];
     for(var i = 0; i < parsed.length; i++){
         new Product(parsed[i].imgSource.substring(4), parsed[i].timesShown, parsed[i].timesVoted);
     }
 
 }
-
-function voteMaster(e){
+//Event handler for each vote, adds vote to product object, renders page for 25 total rounds and then shows chart after rounds are completed. Also stores products to local storage and retrieves them after each vote
+function voteCounterImageRender(e){
     e.preventDefault();
     imageClick = e.target.title;
     for(var i = 0; i < allProducts.length; i++){
@@ -92,18 +91,19 @@ function voteMaster(e){
 }
 
 
-
-function randomGenerator(){
+//Generates a random number
+function randomNumberGenerator(){
     
     return Math.floor(Math.random() * allProducts.length);
 }
 
+//Generates an array of three random numbers making sure that no two subsequent rounds have the same repeat the same three numbers
 function randomNumberIndexCreator(){
 
     for( var i = 0; i < 3; i++){
-        var randomNumber = randomGenerator();
+        var randomNumber = randomNumberGenerator();
         while(randomNumbers.includes(randomNumber)){
-            randomNumber = randomGenerator();
+            randomNumber = randomNumberGenerator();
         }
         randomNumbers.unshift(randomNumber);
     }
@@ -113,6 +113,7 @@ function randomNumberIndexCreator(){
     }
 }
 
+//Adds three images to the page and increases the object property of times shown for each object
 function render(){
     randomNumberIndexCreator();
 
@@ -133,19 +134,21 @@ function render(){
     rounds++
 }
 
-
+//Creates an array of object titles for display on the chart
 function createTitleArray(){
     for(var i = 0; i < allProducts.length; i++){
         imageTitles.push(allProducts[i].title);
     }
 }
 
+///Creates an array of object votes for display on the chart
 function createVoteArray(){
     for(var i = 0; i < allProducts.length; i++){
         imageVotes.push(allProducts[i].timesVoted);
     }
 }
 
+//Creates a canvas html tag for displaying the chart
 function createCanvasTag(){
     createCanvas = document.createElement('canvas');
     createCanvas.setAttribute("id", "myChart")
@@ -154,7 +157,7 @@ function createCanvasTag(){
     canvasEl.appendChild(createCanvas);
 }
 
-
+//Renders a chart of votes for each object on the page in the canvas tag
 function displayChart(){
     createTitleArray();
     createVoteArray();
@@ -231,19 +234,21 @@ function displayChart(){
     });
 }
 
+//Invoked Functions
 
+//Checks to see if local storage holds products, if not it stores new product object instances else it overwrites original product instances with those in local storage
 if(!localStorage.products){
     storeProductLs();
 }else{
     returnProductsLs();
 }
+
+//Renders images on the page
 render();
 
-
-
-
-
-formEl.addEventListener('click', voteMaster);
+//Event listener
+//Calls voteCounterImageRender function on image clicks to count votes and initiate local storage
+formEl.addEventListener('click', voteCounterImageRender);
 
 
 
